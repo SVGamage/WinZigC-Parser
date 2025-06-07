@@ -220,3 +220,43 @@ This is an educational project. For improvements or bug fixes:
 - WinZigC Language Specification (see `project docs/`)
 - WinZigC Grammar Definition
 - WinZigC Lexical Analysis Specification
+
+## Code Structure
+
+The parser has been refactored from a single monolithic file (`winzigc.cpp`) into modular components for better maintainability:
+
+### Core Files
+
+- **`main.cpp`** - Entry point and command-line interface
+- **`token.h`** - Token definitions (TokenType enum and Token struct)
+- **`ast_node.h/cpp`** - AST node class for tree representation
+- **`lexer.h/cpp`** - Lexical analyzer for tokenization
+- **`parser.h/cpp`** - Recursive descent parser implementation
+
+### Build System
+
+- **`Makefile`** - Build configuration supporting separate compilation
+- **`run_tests.sh`** - Test runner for validation
+
+### Dependencies
+
+Each module has clear dependencies:
+
+```
+token.h
+  ↓
+ast_node.h → ast_node.cpp
+  ↓
+lexer.h → lexer.cpp
+  ↓
+parser.h → parser.cpp
+  ↓
+main.cpp
+```
+
+This modular structure improves:
+
+- Code readability and maintenance
+- Compilation time (incremental builds)
+- Testing and debugging capabilities
+- Code reusability
