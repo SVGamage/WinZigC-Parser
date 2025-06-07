@@ -1,12 +1,16 @@
 CXX = g++
 CXXFLAGS = -std=c++11 -Wall -Wextra -O2
 TARGET = winzigc
-SOURCES = winzigc.cpp
+SOURCES = main.cpp ast_node.cpp lexer.cpp parser.cpp
+OBJECTS = $(SOURCES:.cpp=.o)
 
-$(TARGET): $(SOURCES)
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(SOURCES)
+$(TARGET): $(OBJECTS)
+	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJECTS)
+
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(TARGET)
+	rm -f $(TARGET) $(OBJECTS)
 
 .PHONY: clean
