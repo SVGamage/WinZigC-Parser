@@ -512,6 +512,14 @@ ASTNode* Parser::parseConstValue() {
         return createCharNode(value);
     } else if (match(TOK_IDENTIFIER)) {
         return parseName();
+    } else if (match(TOK_TRUE)) {
+        string value = currentToken.value;
+        advance();
+        return createIdentifierNode(value);
+    } else if (match(TOK_FALSE)) {
+        string value = currentToken.value;
+        advance();
+        return createIdentifierNode(value);
     }
     return nullptr;
 }
@@ -569,7 +577,7 @@ ASTNode* Parser::parseDclns() {
         do {
             dclns->addChild(parseDcln());
             consume(TOK_SEMICOLON);
-        } while (match(TOK_IDENTIFIER));
+        } while (match(TOK_IDENTIFIER) && !match(TOK_BEGIN) && !match(TOK_FUNCTION) && !match(TOK_END));
     }
     
     return dclns;
@@ -847,10 +855,30 @@ ASTNode* Parser::parseBody() {
     
     // Parse statement list
     if (!match(TOK_END)) {
-        do {
+        while (!match(TOK_END)) {
             ASTNode* stmt = parseStatement();
-            if (stmt) block->addChild(stmt);
-        } while (consume(TOK_SEMICOLON) && !match(TOK_END));
+            if (stmt) {
+                block->addChild(stmt);
+            } else {
+                // Add null statement for empty statements (consecutive semicolons)
+                block->addChild(new ASTNode("<null>"));
+            }
+            
+            if (!consume(TOK_SEMICOLON)) {
+                // If no semicolon, we need to add a null statement at the end
+                // because the grammar expects 'Statement list ;'
+                if (!match(TOK_END)) {
+                    block->addChild(new ASTNode("<null>"));
+                }
+                break;
+            }
+            
+            // If we consumed a semicolon but are at END, add null statement
+            if (match(TOK_END)) {
+                block->addChild(new ASTNode("<null>"));
+                break;
+            }
+        }
     }
     
     consume(TOK_END);
@@ -990,8 +1018,18 @@ ASTNode* Parser::parseStatement() {
         
         // Parse case clauses
         while (!match(TOK_END) && !match(TOK_OTHERWISE)) {
-            caseNode->addChild(parseCaseclause());
+            ASTNode* clause = parseCaseclause();
+            if (clause) {
+                caseNode->addChild(clause);
+            }
+            
+            // Try to consume semicolon, but don't require it
             consume(TOK_SEMICOLON);
+            
+            // Safety check - if we haven't advanced, break to avoid infinite loop
+            if (!match(TOK_END) && !match(TOK_OTHERWISE) && clause == nullptr) {
+                break;
+            }
         }
         
         // Parse otherwise clause
@@ -1165,6 +1203,7 @@ int main(int argc, char* argv[]) {
         if (ast) {
             // Print the AST
             ast->print(0, true);
+            cout << endl; // Add final newline to match expected output
         } else {
             cerr << "Parse error" << endl;
             return 1;
