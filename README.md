@@ -1,23 +1,14 @@
-# WinZigC Parser - CS4542 Compiler Design Project
-
-Index : 200681N
-Name : [Your Name]
+# WinZigC Parser
 
 # EXECUTION INSTRUCTIONS
 
-1. EXTRACTING THE SUBMISSION
-
----
-
-tar xvf project1_200681N.tar
-
-2. BUILDING THE PROJECT
+1. BUILDING THE PROJECT
 
 ---
 
 make
 
-3. RUNNING THE PARSER
+2. RUNNING THE PARSER
 
 ---
 
@@ -26,7 +17,7 @@ make
 ./winzigc -ast winzig_test_programs/winzig_03 > tree.03
 ...and so on for all test cases
 
-4. VERIFYING OUTPUT
+3. VERIFYING OUTPUT
 
 ---
 
@@ -35,13 +26,13 @@ diff tree.02 winzig_test_programs/winzig_02.tree
 diff tree.03 winzig_test_programs/winzig_03.tree
 ...and so on for all test cases
 
-5. RUN ALL TEST CASES
+4. RUN ALL TEST CASES
 
 ---
 
 make test
 
-6. CLEAN THE BUILD
+5. CLEAN THE BUILD
 
 ---
 
