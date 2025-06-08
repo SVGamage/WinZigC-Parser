@@ -4,13 +4,14 @@
 
 1. BUILDING THE PROJECT
 
----
+```bash
+make
 
-```make```
+```
 
 2. RUNNING THE PARSER
 
-```
+```bash
 
 ./winzigc -ast winzig_test_programs/winzig_01 > tree.01
 ./winzigc -ast winzig_test_programs/winzig_02 > tree.02
@@ -21,7 +22,7 @@
 
 3. VERIFYING OUTPUT
 
-```
+```bash
 
 diff tree.01 winzig_test_programs/winzig_01.tree
 diff tree.02 winzig_test_programs/winzig_02.tree
@@ -32,7 +33,7 @@ diff tree.03 winzig_test_programs/winzig_03.tree
 
 4. RUN ALL TEST CASES
 
-```
+```bash
 
 make test
 
@@ -40,7 +41,7 @@ make test
 
 5. CLEAN THE BUILD
 
-```
+```bash
 
 make clean
 
