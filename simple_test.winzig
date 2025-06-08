@@ -1,6 +1,0 @@
-program simple:
-var x: integer;
-begin
-    x := 5;
-    output(x)
-end simple.
